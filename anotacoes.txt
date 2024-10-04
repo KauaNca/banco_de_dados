@@ -1,0 +1,1 @@
+Quando fazer um banco de dados, tenha certeza de 'amarrar' os dados para que não haja possibilidade de excluir fácil
