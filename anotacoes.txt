@@ -1,1 +1,33 @@
 Quando fazer um banco de dados, tenha certeza de 'amarrar' os dados para que não haja possibilidade de excluir fácil
+
+04/10/2024
+BANCO DE DADOS - mySQL
+
+AULA 405 - O QUE É?
+SQL - Linguagem de consulta estruturada
+É uma linguagem declarativa. -> especifica o dado quer obter ou modificar e não
+como sistema deve executar a operação
+Por meio dela, pode-se manipular, ler, criar, atualizar, excluir, recuperar,controlar dados por meio do SGBD.
+
+Há subcategorias do SQL
+-DDL
+-DML
+-DCL
+-DTL
+-DQL
+
+DEPOIS DE UMA OLHADA NO ACID: Atomicidade, consitência, isolamento e durabilidade
+
+Relação entre SQL e MySQL
+SQL é a linguagem utilizada para interagir com bancos de dados relacionais, enquanto MySQL é um dos vários 
+SGBDRs que implementam essa linguagem.
+
+
+SQL é a linguagem padrão para gerenciar e manipular bancos de dados relacionais.
+MySQL é um sistema de gerenciamento de banco de dados relacional que utiliza SQL para interagir com os dados, 
+oferecendo uma solução robusta, escalável e de código aberto para armazenar e gerenciar informações.
+
+
+O QUE SÃO TABELAS? São unidades de armazenamento que possui um número linhas de dados.
+Armazenamento de mídia -> não há armazenamento, e sim o nome do arquivo digital e sua extensão para que a própria aplicação se
+encarregue de procucar e dar o que a pessoa quer.
