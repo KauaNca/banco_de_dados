@@ -57,3 +57,15 @@ create table teste(
 insert into teste (preferencias,situacao,uf) 
 values('musica,livro','inativo','DF'), 
 ('cinema','ativo','MG') #perceba que o set pode mais de uma opção, o enum é mais fechado e o char é fixo
+
+
+
+INNER JOIN
+Essencial para cruzar informações, para combinar dados de múltiplas tabelas em uma base de dados relacional, 
+especialmente quando as tabelas estão relacionadas por chaves primárias e estrangeiras. 
+
+sintaxe:
+ 	SELECT colunas #colunas que você quer que apareça
+	FROM tabela1 	#de onde vai começar a procurar. O normal é começar da tabela mais fraca (mais chaves estrangeiras) para ir subindo e conseguindo cruzar informações
+	INNER JOIN tabela2 	#tabela onde está as colunas que não estão na tabela1 e que vai servir para cruzar informações
+	ON tabela1.coluna_comum = tabela2.coluna_comum; #aqui é feito a comparação, normalmente entre chaves, para que todas as colunas que não há na primeira tabela apareça
