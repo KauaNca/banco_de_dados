@@ -28,14 +28,103 @@ MySQL é um sistema de gerenciamento de banco de dados relacional que utiliza SQ
 oferecendo uma solução robusta, escalável e de código aberto para armazenar e gerenciar informações.
 
 
-O QUE SÃO TABELAS? São unidades de armazenamento que possui um número linhas de dados.
+O QUE SÃO TABELAS? São unidades de armazenamento que possui um número linhas de dados/de registros.
 Armazenamento de mídia -> não há armazenamento, e sim o nome do arquivo digital e sua extensão para que a própria aplicação se
 encarregue de procucar e dar o que a pessoa quer.
+
+TIPOS DE DADOS - PRIMITIVOS
+
+Campos de texto
+	-TEXT(tamanho variável que armazena uma grande quantidade de caracteres)
+	-VARCHAR(tamanho variável que armazena de 0 até 255 caracteres)
+	-CHAR(tamanho fixo que armazena de 0 até 255 caracteres)
+
+Campos numéricos
+	-INT
+	-FLOAT
+	-DECIMAL
+
+Campos de data e hora
+	-DATE(formato ano,mês,dia)
+	-TIME
+	-DATETIME
+
+
+ARQUIVOS DE MÍDIA ARMAZENAMOS A SEU ENDEREÇO PARA QUE QUANDO NECESSÁRIO O BANCO PUXE
 
 
 CHAR X VARCHAR
 
 char é um comprimento fixo, o que não for utilizado é preenchido com espaços em branco;
+
+**IMAGINE ESSES UNDERLINES COMO ESPAÇOS DE MEMÓRIA
+
+CHAR - 6 posições - Tamanho fixo
+JORGE
+_ _ _ _ _ _ 
+
+Jorge está ocupando apenas 5, 1 ficará sobrando e será preenchido com espaço em branco.
+
+Desvantagem: Em grandes quantidades desse caso, ocasiona reservas de espaço de forma desnecessário.
+Vantagem: Pesquisa mais rápido
+
+
+VARCHAR - 6 posiçoes - Tamanho variável
+
+Vantagem: Apesar de ter declarado 6 posições, o nome só ocupará 5 e não ocupará um espaço em branco, ou seja,
+ocupa o espaço necessário e libera o resto.
+Desvantagem: Por ser de tamanho variável possui um meta dado com uma instrução
+de finalização do texto, o que produz lentidão em pesquisas, mas imperceptível praticamente.
+
+
+
+AULA 412 - RENOMEANDO TABELAS
+sintaxe:
+rename <nome_da_tabela> to <novo_nome>;
+
+
+_____________________________
+
+
+AULA 413 - INCLUINDO,EDITANDO E REMOVENDO COLUNAS DE TABELA (ALTER TABLE)
+
+ADD - Inclusão de coluna na tabela.
+EX.:  alter table curso_udemy add column turno char(5);##adicionando coluna
+
+CHANGE - Alteração do nome de uma coluna e de suas propriedades, como o tipo.
+EX.: 
+
+alter table curso_udemy change nome_curso n_curso char(60);##alterando
+alter table curso_udemy change n_curso nome_curso char(50);##voltando ao normal
+
+**PERCEBA QUE A PARTIR DO NOME DA COLUNA JÁ COMEÇA A MUDANÇA.
+
+DROP - Remover
+EX.: alter table curso_udemy drop nome_curso;
+
+
+________________
+
+AULA 414 - INSERT
+
+EX.: 
+insert into curso_udemy(id_curso,nome_curso,imagem_curso, data_cadastro,investimento)
+value(1,'ADS','urusei_yatsura.jpg','2024-10-08',1500.82);
+
+--> o primeiro parêntese é as colunas que serão preenchidas, aqui não importa a ordem.
+--> o segundo, sim, importa a ordem, pois é os registros de acordo com o primeiro.
+
+
+________________
+
+AULA 415 - SELECT
+sintaxe:
+SELECT <colunas> FROM <nome_da_tabela>
+
+
+
+
+
 
 
 RESULTADOS FIXOS E VARIÁVEIS
@@ -66,6 +155,6 @@ especialmente quando as tabelas estão relacionadas por chaves primárias e estr
 
 sintaxe:
  	SELECT colunas #colunas que você quer que apareça
-	FROM tabela1 	#de onde vai começar a procurar. O normal é começar da tabela mais fraca (mais chaves estrangeiras) para ir subindo e conseguindo cruzar informações
+	FROM tabela1 	#de onde vai começar a procurar. Começar da tabela mais fraca (mais chaves estrangeiras) para ir subindo e conseguindo cruzar informações
 	INNER JOIN tabela2 	#tabela onde está as colunas que não estão na tabela1 e que vai servir para cruzar informações
 	ON tabela1.coluna_comum = tabela2.coluna_comum; #aqui é feito a comparação, normalmente entre chaves, para que todas as colunas que não há na primeira tabela apareça
