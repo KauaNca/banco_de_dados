@@ -125,16 +125,23 @@ INSERT INTO projeto (valor, tipo_projeto, nome_projeto, data_inicio, status, dat
 INSERT INTO projeto (valor, tipo_projeto, nome_projeto, data_inicio, status, data_fim, previsao, id_colaborador) 
 VALUES (10000.00, 'Arquitetura', 'Projeto Exemplo', '2024-10-01', 'Em andamento', '2025-01-01', '2025-01-15', 2);
 
+select *from projeto;
+
 alter table obra change status status varchar(20);
 INSERT INTO obra (valor, data_inicio, previsao, data_fim, status, id_empreiteira, id_projeto, id_colaborador) VALUES
 (300000.00, '2024-03-15', '2024-06-15', '2024-06-30', 'Em Andamento', 1, 2, 1);  -- Usando a empreiteira com ID 1, projeto com ID 1, e colaborador com ID 10
 
 INSERT INTO obra (valor, data_inicio, previsao, data_fim, status, id_empreiteira, id_projeto, id_colaborador) VALUES 
-(50000.00, '2024-10-01', '2025-02-01', '2025-02-15', 'Em andamento', 2, 3, 2);
+(50000.00, '2024-10-01', '2025-02-01', '2025-02-15', 'Em andamento', 2, 1, 2);
 
 select pessoa.id_pessoa, nome, funcao from colaborador ##selecionando as colunas que quero da tabela colaborador, mas como não tem a coluna nome tem que fazer inner join
 inner join pessoa on colaborador.id_pessoa = pessoa.id_pessoa; #o inner join procurará em pessoa a coluna nome mas quando o id de pessoa de colaborador for igual ao de pessoa
 
+select nome_fantasia,rua,cidade,uf,telefone,nome_projeto,obra.data_inicio,obra.previsao,obra.data_fim,obra.valor from obra
+inner join projeto on projeto.id_colaborador = obra.id_colaborador #primeiro puxo o nome do projeto, sendo id colaborador a coisa comum entre os dois
+inner join empreiteira on obra.id_empreiteira = empreiteira.id_empreiteira #puxo a empreiteira para que assim eu possa buscar o nome da tabela pessoa
+inner join pessoa on pessoa.id_pessoa = empreiteira.id_pessoa #com o id pessoa em empreiteira faz uma ligaçao e também posso puxar o endereço por meio desse id que também está presente em endereco
+inner join endereco on endereco.id_pessoa = pessoa.id_pessoa;
 
 
 

@@ -122,6 +122,82 @@ sintaxe:
 SELECT <colunas> FROM <nome_da_tabela>
 
 
+FILTROS -> servem para especificar quais registros queremos e formar uma informação 
+Where <- onde
+
+SELECT id_curso,nome_curso from tb_curso WHERE investimento <500 and carga-horaria > 30
+------->operadores de comparação
+= (igual a)
+<> ou != (diferente)
+
+______________________________________________________________________________
+LIKE (usado para buscar padrões, especialmente dentro de uma coluna textual)
+Ex.:    SELECT * FROM cursos WHERE nome_curso LIKE 'Curso%';  -- Cursos que começam com "Curso"
+
+O uso do like vem junto com caracteres curingas
+% (indica que pode haver a existência de um conjunto de caracteres antes ou depois)
+_ (indica que pode haver a existência de um ou mais caracteres em uma posição ESPECÍFICA do texto)
+
+Exs:
+where nome like '%e' <- filtro para nomes que terminam com a letra 'e'. O % indica um conjunto de caracteres antes da letra.
+where nome like 'e%' <- começa com a letra e minúscula
+where nome like '%a%'<- encontrar nomes que possua a letra a e antes e depois há conjunto de caracteres
+
+
+where nome like '_riel' <-nomes que tenham riel e um caractere antes.
+where nome like '_ru_' <- um caractere antes e depois
+where nome like 'I__' <- começa com a letra I e depois há duas letras apenas
+
+
+E claro, pode fundir
+
+where nome like '%tt_' <-- termina com tt e um caractere qualquer. 
+______________________________________________________________________________
+BETWEEN ... AND ... (especificar um intervalo de valores)
+Ex.:    SELECT * FROM cursos WHERE investimento BETWEEN 200 AND 300
+
+******Pode ser datas também
+Ex.:    SELECT * FROM cursos WHERE data_inicio BETWEEN '2018-10-10' AND '2019-06-06'
+
+
+____________________________________
+IN (usado para verificar se um valor está dentro de um conjunto e após confirmar ele trás os registros)
+Ex.: 	SELECT *FROM cursos WHERE id_curso in (1,2,3)
+	select nome from animes where nota in (8.5);
+	**pode colocar com operadores lógicos também
+	select nome from anime where nota in (8.5) and genero in...
+
+Há também o NOT IN, que faz o oposto 
+
+
+_____________________________________
+
+
+IS NULL(verifica se um campo é nulo)
+Ex.: 	SELECT * FROM cursos WHERE data_cadastro IS NULL;
+
+IS NOT NULL
+Ex.: 	SELECT * FROM cursos WHERE data_cadastro IS NOT NULL;
+
+
+IF (especifica uma condição para o select)
+Ex.: SELECT IF(investimento > 300, 'Caro', 'Barato') AS preco_categoria FROM cursos;
+
+------->operadores lógicos
+
+AND (todas as comparações devem ser verdadeiras para retornar algo)
+OR (pelo menos uma delas devem ser verdadeiras)
+
+Ex.: 	select nome from animes where nota >=8.8 and ano_lancamento > 2012 and numero_episodios > 20 ;
+**todas tem que ser verdadeiras
+
+Ex.: 	select nome from animes where numero_episodios between 100 and 300;
+
+
+
+
+A consulta por si só varre todos os campos da tabela
+
 
 
 
