@@ -199,6 +199,247 @@ Ex.: 	select nome from animes where numero_episodios between 100 and 300;
 A consulta por si só varre todos os campos da tabela
 
 
+AULA 423 - ORDER BY
+...ORDER BY idade ASC, nome DESC (coluna idade na ordem crescente e nome descrescente)
+ASC -> valor padrão, ou seja, não precisava colocar idade ASC
+
+**E se forem vários
+Simples: a primeira ordem é prioridade
+
+Ex.: select *from animes where nota > 8.5 order by nome desc, nota asc;
+->primeiro a coluna nome será ordenada de forma decrescente
+->após isso nota
+
+
+
+AULA 424 - SELECT - LIMITANDO NÚMERO DE REGISTROS (LIMIT)
+->-> vem no final da query
+
+SELECT<colunas(s)>FROM<tabela(s)> WHERE<filtro(s)> ORDER BY <ordenacao> LIMIT n OFFSET a
+
+SINTAXE: LIMIT n ->-> n = número de registros que você quer
+
+SINTAXE COM OFFSET: LIMIT n OFFSET a ->->OFFSET indica qual posição começar
+
+SINTAXE LIMIT E OFFSET JUNTOS: LIMIT a,n ->->primeiro o OFFSET e depois o número LIMIT
+
+OBS.: Se tiver um id, apesar de começar do 1, os registros começam do 0, então
+
+	registro 0 = id 1
+	registro 1 = id 2
+
+OFFSET = DESLOCAMENTO
+
+Ex.: SELECT *FROM animes where nota > 8.5 order by nome desc, nota asc limit 5 offset 7; #5 registros, mas começa do registro 7
+
+
+AULA 425 - FUNÇÕES DE AGREGRAÇÃO
+São funções responsaveis por permitir operações aritméticas sobre os 
+valores de UMA COLUNA.
+1 - MIN(<coluna>) -> retorna o menor valor 
+2 - MAX(<coluna>) -> retorna o maior valor
+3 - AVG(<coluna>) -> retorna a média
+4 - SUM(<coluna>) -> soma todos os valores
+5 - CONUT(<coluna>) -> retorna a quantidade de registro que passaram na condição
+COUNT(*) <- todos os registros da tabela
+
+Ex.:    select min(nota) from animes; (a menor nota)
+	SELECT count(nota) from animes where nota > 8.6	(notas superiores a 8.6)
+
+OBS.: 
+select min(nota),nome from animes; (MODO ERRADO)
+
+A consulta SELECT MIN(nota), nome FROM animes; não está funcionando 
+porque você está tentando usar uma função agregada (MIN()) ao lado de 
+uma coluna não agregada (nome), sem uma cláusula GROUP BY. 
+Quando você usa funções agregadas em SQL (como MIN(), MAX(), SUM(), etc.), 
+todas as outras colunas que aparecem na consulta devem estar em uma 
+cláusula GROUP BY, ou devem ser incluídas em outra função agregada.
+
+
+SELECT nome, nota FROM animes
+WHERE nota = (SELECT MIN(nota) FROM animes); (MODO CORRETO)
+--> aqui é uma subconsulta
+
+
+
+
+AULA 427 - GROUP BY
+É uma cláusula SQL usada para agrupar linhas que têm valores iguais em colunas
+especificadas. Geralmente, é utilizado em conjunto com funções de agregação, 
+como COUNT(), SUM(), AVG(), MAX(), e MIN(), 
+para realizar operações em grupos de dados.
+Imagine que num tabela tenha coluna Interesses e dentro dela tenha os resultados 'Esporte','Música'.
+Cada pessoa escolheria um e utilizando o GROUP BY ele disponibiliza os registros de quem escolheu
+somente Esporte e somente de Música, separando em dois grupos distintos.
+
+Sintaxe Básica
+SELECT coluna1, função_agregação(coluna2)
+FROM nome_da_tabela
+WHERE condição (opcional)
+GROUP BY coluna1;
+
+Ex.: 
+
+SELECT interesses, count(*) AS total
+FROM qualquer
+GROUP BY produto_id;
+
+->-> ele vai selecionar interesses e contar todos os interesses, mas com GROUP BY,
+a contagem será separada de quem escolheu Esporte e de Música
+
+OBSERVAÇÃO: Quando selecionar uma coluna, se ela não estiver na função de agregação,
+ela deve estar no GROUP BY
+
+-- Correto
+SELECT categoria, COUNT(*) 
+FROM produtos 
+GROUP BY categoria;
+
+-- Incorreto
+SELECT categoria, subcategoria, COUNT(*) 
+FROM produtos 
+GROUP BY categoria;
+
+
+AULA 428 - HAVING
+É um filtro para o GROUP BY. Imagina aquele exemplo anteriro do interesse e que
+só queria os resultados de quem só escolheu Música, seria isso.
+
+***O WHERE NÃO SERVIRIA PARA ISSO? Não. Pense em camadas, o where atuaria nos
+resultados da primeira leva, o GROUP BY nos resultados do WHERE e o HAVING na do 
+GROUP BY
+
+
+Ex.: Mostrar Categorias com Receita Total Superior a R$10.000
+SELECT categoria, SUM(preco) AS receita_total
+FROM produtos
+GROUP BY categoria
+HAVING SUM(preco) > 10000;
+
+
+SELECT ano_lancamento,count(*)
+FROM animes
+WHERE ano_lancamento > 2000
+GROUP BY ano_lancamento
+HAVING ano_lancamento > 2005;
+/*Perceba são 3 filtros, um com where, outro com group by e outro com having*/
+/*Seleciona a coluna ano e contar todos da tabela animes onde o ano deve ser maior que 2000,
+agrupado pelo ano e que o ano desse agrupamento tenha ano maior que 2005
+*/
+
+AULA 429 - UPDATE registros
+Pode-se alterar o que já está dentro da tabela
+
+Sintaxe Básica
+
+UPDATE 
+	<tabela>
+SET
+	<coluna> = <valor>,<coluna> = <valor>,<coluna> = <valor>
+WHERE 
+	<filtro(s)>
+
+->->pode ser de várias colunas de uma vez de apenas um único registro
+OBS: AGORA SE QUISER QUE VÁRIOS SEJAM AFETADOS, USE O WHERE
+
+Ex.: 
+Um único registro
+UPDATE animes 
+SET nome = 'Those Obnoxious Aliens', ano_lancamento = 1981 
+WHERE nome = "Urusei Yatsura";
+
+
+Vários
+UPDATE animes
+SET nota = 8.9
+WHERE ano_lancamento > 2000
+
+
+
+
+
+AULA 430 - DELETE
+Não deve ser usado normalmente. Quando vai se excluir algo, apenas 
+faz a atualizacao de que aquele dado está inativo.
+Se for utilizar, cuidado com o WHERE
+
+Sintaxe Básica
+DELETE FROM <tabela> WHERE <filtro(s)>
+
+
+AULA 431 - RELACIONAMENTOS, CHAVES PRIMÁRIAS E ESTRANGEIRAS
+
+primary key dá a garantia que não have outro registro igual
+
+o id_produto se repetiu pois são imagens do mesmo produto, diferente do
+id_imagem
+
+TIPOS DE RELACIONAMENTO
+
+1) Um para muitos(1:N ou 1)
+
+A tabela A só pode ter vários da tabela B, mas a tabela B somente um de A.
+Ex.:
+Um cliente pode ter vários pedidos, mas um pedido só pode ter um id_cliente.
+Um autor pode fazer vários livros, mas o livro só pode ter um autor.
+Uma categoria pode ter vários produtos, mas cada produto pertence a uma única categoria.
+Cada usuário possui um único perfil, e cada perfil pertence a apenas um usuário.
+
+2) Um para um (1:1)
+->Eu falo que é quando uma tabela só existe quando a outra é feita.
+
+->é uma associação entre duas tabelas onde cada registro de uma tabela está relacionado a 
+apenas um registro na outra tabela e vice-versa. Isso significa que para cada linha na 
+tabela "A", existe no máximo uma linha correspondente na tabela "B", e para cada linha 
+na tabela "B", existe no máximo uma linha correspondente na tabela "A".
+
+Ex.:
+Uma pessoa só pode ter um passaporte, e o passaporte só pode ser uma única pessoa.
+Cada país tem uma única capital, e cada capital pertence a apenas um país.
+__________________________________________________
+
+
+3) Muito para muitos
+
+->->ocorre quando múltiplas instâncias de uma entidade estão associadas 
+a múltiplas instâncias de outra entidade. 
+Em outras palavras, cada registro da Tabela A pode estar relacionado a vários registros 
+da Tabela B, e cada registro da Tabela B pode estar relacionado a vários registros da 
+Tabela A.
+Ex.:
+Um estudante estar em vários cursos e cursos podem ter muitos estudantes
+Um autor pode escrever vários livros, e um livro pode ser escrito por vários autores.
+Um pedido pode conter vários produtos, e um produto pode estar presente em vários pedidos.
+
+->-> perceba que depende do tipo de contexto que você está colocando no banco de dados.
+Autor-Livro em um estava 1:n e neste n:n
+
+Em bancos de dados relacionais, não existe suporte direto para relacionamentos M. 
+Para implementá-los, utilizamos uma tabela intermediária (também chamada de tabela 
+associativa ou tabela de junção), que quebra o relacionamento M
+em dois relacionamentos 1
+
+
+
+COMO SABER QUAL FICA COM A CHAVE ESTRANGEIRA?
+No 1 para 1, tem que saber qual tabela depende mais da outra, qual for mais,
+fica com a chave.
+Em pessoa-passaporte, passaporte fica com a chave pois para se ter um passaporte precisa 
+de pessoa.
+
+No 1 para muitos, fica no lado dos muitos.
+
+No muitos para muitos, acaba-se criando tabela para juntar as duas chaves estrangeiras de
+cada tabela.
+
+
+
+
+
+
+
+
 
 
 

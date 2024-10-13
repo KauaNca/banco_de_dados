@@ -24,6 +24,22 @@ select nome from animes where nome like '%ra'; #terminam com ra
 select nome from animes where nome like 'D%'; #começa com D
 select nome from animes where nome like '%a_';#termina com 'a' e um caracter qualquer
 
+#testando o order by
+SELECT *FROM animes where nota > 8.5 order by nome desc, nota asc;
+
+#testando o LIMIT e OFFSET
+SELECT *FROM animes where nota > 8.5 order by nome desc, nota asc limit 5; #apenas 5 registros
+SELECT *FROM animes where nota > 8.5 order by nome desc, nota asc limit 5 offset 7; #5 registros, mas começa do registro 7
+SELECT *FROM animes where nota > 8.5 order by nome desc, nota asc limit 7,5; #mesma coisa da anterior, mas sintaxe enxuta
+
+#testando funções de agregração 
+SELECT nome, nota
+FROM animes
+WHERE nota = (SELECT MIN(nota) FROM animes);
+
+SELECT count(nota) from animes where nota > 8.6;#8 animes
+
+
 
 -- Inserção dos registros
 INSERT INTO animes (nome, genero, ano_lancamento, numero_episodios, nota) VALUES
