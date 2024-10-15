@@ -8,6 +8,8 @@ VALUES
 (4, 0, 35.00, 34.50, 0.50, null, 'Finalizado', 1, 2),  -- Venda do cliente 1 com atendente 2
 (5, 0, 28.00, 28.00, null, null, 'Finalizado', 2, 3),  -- Venda do cliente 2 com atendente 3
 (6, 0, 40.00, 39.50, 0.00, 0.50, 'Finalizado', 1, 1);  -- Venda do cliente 1 com atendente 1
+INSERT INTO venda (id_venda, quantidade, preco, total, desconto, acrescimo, situacao, id_cliente, id_atendente)
+VALUES(7,0,0,0,0,0,'Finalizado',2,3); /*Fazer um exemplo de alteração por meio da tabela item_venda*/
 
 INSERT INTO item_venda (id_item_venda, quantidade, preco, desconto, acrescimo, valor_bruto, valor_total, cancelado, id_venda, id_produto)
 VALUES
@@ -22,6 +24,15 @@ VALUES
 (9, 1, 10.00, 0.00, 0.00, 10.00, 10.00, 'Não', 5, 10),-- Manteiga 200g
 (10, 1, 3.50, 0.00, 0.00, 3.50, 3.50, 'Não', 5, 7);   -- Iogurte Natural 170g
 
+INSERT INTO item_venda (id_item_venda, quantidade, preco, desconto, acrescimo, valor_bruto, valor_total, cancelado, id_venda, id_produto)
+VALUES(11,5,(quantidade*8.50),1.00,0,8.50,(preco-desconto),'Não',7,1),(12,1,(quantidade*4.50),1.00,0,4.50,(preco-desconto),'Não',7,2),
+(13,2,(quantidade*12.50),5.00,0,25.00,(preco-desconto),'Não',7,4);
+
+UPDATE venda 
+SET preco = (SELECT SUM(preco) FROM item_venda WHERE id_venda=7), 
+desconto = (SELECT SUM(desconto) FROM item_venda WHERE id_venda=7),
+total = (preco-desconto) WHERE id_venda = 7;
+/*utilizando select como valor*/
 
 INSERT INTO pessoa (id_pessoa, nome, idade, cpf, situacao)
 VALUES 
