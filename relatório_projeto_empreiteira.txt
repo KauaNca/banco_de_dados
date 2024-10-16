@@ -1,0 +1,18 @@
+/*
+Trazer os dados para o relatório:
+Nome do colaborador -> pessoa
+Nome do Arquiteto -> pessoa
+Nome da Empresa -> pessoa
+Qual obra a empresa está responsável -> obra x
+Qual o nome do projeto. ->projeto x
+Qual o valor da obra ->obra x
+Qual o valor do projeto ->projeto x
+Qual data inicial da obra. -> obra x
+*/
+SELECT pemp.nome AS empresa_responsável, pcol.nome AS nome_arquiteto, nome_projeto, pro.valor AS Valor_projeto, ob.data_inicio,ob.valor AS Valor_obra FROM obra ob
+INNER JOIN projeto pro on pro.id_projeto = ob.id_projeto /*AQUI EU CONSIGO O NOME DO PROJETO E SEU VALOR COM OS IDs*/
+INNER JOIN colaborador col on ob.id_colaborador = col.id_colaborador /*FAÇO A LIGAÇÃO PARA CONSEGUIR O ID DA PESSOA PRESENTE NA TABELA COLABORADOR E ASSIM FAZER A LIGAÇÃO COM PESSOA*/
+INNER JOIN pessoa pcol on pcol.id_pessoa = col.id_pessoa /*CONSIGO O NOME DA PESSOA NA OBRA E COLOCANDO APELIDOS PARA A BUSCAR NÃO SER AMBÍGUIA*/
+INNER JOIN empreiteira emp on emp.id_empreiteira = ob.id_empreiteira/*FAÇO A LIGAÇÃO PARA CONSEGUIR O ID DA PESSOA PRESENTE NA TABELA E ASSIM FAZER A LIGAÇÃO COM PESSOA*/
+INNER JOIN pessoa pemp on pemp.id_pessoa = emp.id_pessoa
+ORDER BY pemp.nome;

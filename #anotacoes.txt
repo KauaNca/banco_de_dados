@@ -439,6 +439,82 @@ cada tabela.
 
 
 
+AULA 438 A 440 - JOINS
+São junções de registros entre tabelas tendo como requisito para que apareça é que as 
+tabelas tenham informações que se relacionem. Utiliza-se chaves primárias e estrangeiras para que ocorra a ligação.
+
+Imagine que exista duas tabelas: cliente e pedidos - relacionamento 1:N.
+Agora imagina que na tabela cliente tenha 5 registros, no caso, pessoas.
+E que em pedidos, 3 registros, no caso, clientes que fizeram pedidos.
+Nessa relação, 2 clientes não realizaram pedidos, então, imagina que 3 clientes
+realizaram 1 pedido cada.
+
+
+LEFT JOIN (Junção à esquerda):
+Retorna todas as linhas da tabela à esquerda e as correspondências da tabela à direita. 
+Se não houver correspondência, valores NULL serão retornados para a tabela da direita.
+
+SELECT * FROM cliente LEFT JOIN pedidos on cliente.id_cliente = pedidos.id_cliente;
+
+Dessa forma, apareceria mais ou menos assim:
+
+tabela cliente - tabela pedido
+cliente 1        pedido 1
+cliente 2        pedido 2
+cliente 3 	 pedido 3
+cliente 4 	 null
+cliente 5 	 null 
+
+O left join dá prioridade à tabela a sua esquerda, então selecionará todos os clientes e se tiver 
+algo em comum, uma correspondência com a tabela à direita. Caso não NULL.
+
+
+
+RIGHT JOIN(JUNÇÃO À DIREITA) 
+Retorna todas as linhas da tabela à direita e as correspondências da tabela à esquerda. 
+Se não houver correspondência, valores NULL serão retornados para a tabela da esquerda.
+
+
+SELECT * FROM cliente RIGHT JOIN pedidos on cliente.id_cliente = pedidos.id_cliente;
+
+Utilizando o mesmo exemplo, apareceria assim: 
+
+tabela cliente - tabela pedido
+cliente 1        pedido 1
+cliente 2        pedido 2
+cliente 3 	 pedido 3
+
+Como os outros clientes não compraram, eles não se enquadram para aparecer pois
+não há relacionamento
+
+
+
+INNER JOIN(JUNÇÃO INTERNA)
+
+Esse retorna todas as correspondência que sejam comuns a ambos.
+No exemplo, imagina que tabela pedido tenha um pedido 4, mas claro sem
+corresponder a nenhum cliente.
+No INNER JOIN, ele excluiria todos as não correspondências, então cliente 4 e 5 e
+pedido 4 ficariam de foram.
+
+SELECT * FROM cliente INNER JOIN pedidos on cliente.id_cliente = pedidos.id_cliente;
+tabela cliente - tabela pedido
+cliente 1        pedido 1
+cliente 2        pedido 2
+cliente 3 	 pedido 3
+
+Se fosse no RIGHT JOIN, pedido 4 apareceria, mas no lado do cliente só teria NULL.
+
+
+->-> AS CHAVES SERVEM APENAS PARA QUE FAÇA A LIGAÇÃO ENTRE TABELAS E ASSIM
+O SELECT PODE TER ACESSO AS COLUNAS DAS DUAS.
+
+
+
+
+
+
+
 
 
 

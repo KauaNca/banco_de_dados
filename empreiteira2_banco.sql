@@ -1,4 +1,4 @@
-create database empreiteira3;
+create database empreiteira;
 use empreiteira3;
 
 create table pessoa(
@@ -160,20 +160,70 @@ select*from obra;
 select*from projeto;
 
 
-
+/*MINHA RESOLUÇÃO*/
 /*
-Nome do colaborador
-Nome do Arquiteto
-Qual obra a empresa está responsável 
+Trazer os dados para o relatório:
+Nome do colaborador -> pessoa
+Nome do Arquiteto -> pessoa
+Nome da Empresa -> pessoa
+Qual obra a empresa está responsável -> obra x
+Qual o nome do projeto. ->projeto x
+Qual o valor da obra ->obra x
+Qual o valor do projeto ->projeto x
+Qual data inicial da obra. -> obra x
 */
-SELECT pessoa.nome as nome_colaborador,pessoa.nome as empresa_reponsavel,obra.data_inicio,obra.valor,nome_projeto,projeto.valor FROM obra
-INNER JOIN projeto on projeto.id_projeto = obra.id_projeto
-INNER JOIN empreiteira emp on emp.id_empreiteira = obra.id_empreiteira
-INNER JOIN pessoa on  pessoa.id_pessoa = emp.id_pessoa
-INNER JOIN colaborador on colaborador.id_pessoa = obra.id_colaborador
-INNER JOIN pessoa on pessoa.id_pessoa = colaborador.id_pessoa;
+SELECT pemp.nome AS empresa_responsável, pcol.nome AS nome_arquiteto, nome_projeto, pro.valor AS Valor_projeto, ob.data_inicio,ob.valor AS Valor_obra FROM obra ob
+INNER JOIN projeto pro on pro.id_projeto = ob.id_projeto /*AQUI EU CONSIGO O NOME DO PROJETO E SEU VALOR COM OS IDs*/
+INNER JOIN colaborador col on ob.id_colaborador = col.id_colaborador /*FAÇO A LIGAÇÃO PARA CONSEGUIR O ID DA PESSOA PRESENTE NA TABELA COLABORADOR E ASSIM FAZER A LIGAÇÃO COM PESSOA*/
+INNER JOIN pessoa pcol on pcol.id_pessoa = col.id_pessoa /*CONSIGO O NOME DA PESSOA NA OBRA E COLOCANDO APELIDOS PARA A BUSCAR NÃO SER AMBÍGUIA*/
+INNER JOIN empreiteira emp on emp.id_empreiteira = ob.id_empreiteira/*FAÇO A LIGAÇÃO PARA CONSEGUIR O ID DA PESSOA PRESENTE NA TABELA E ASSIM FAZER A LIGAÇÃO COM PESSOA*/
+INNER JOIN pessoa pemp on pemp.id_pessoa = emp.id_pessoa
+ORDER BY pemp.nome;
 
 
+/*Relatório Empreiteira*/
+/*
+	Trazer os dados do endereço de  Empreiteira, Mestre de Obra e o Arquiteto.
+Rua
+CEP
+Cidade
+UF
+Vou adicionar: nome da empresa
+*/
+
+SELECT pemp.nome,rua,cidade,cep,uf,pcol.nome AS nome_do_arquiteto,pmestre.nome AS nome_mestre_de_obras FROM obra ob  
+INNER JOIN empreiteira emp on emp.id_empreiteira = ob.id_empreiteira
+INNER JOIN pessoa pemp on emp.id_pessoa = pemp.id_pessoa/*utilizando a ligação anterior, pego o id da pessoa para pegar o nome e na próxima já pegar o endereco*/
+INNER JOIN endereco on pemp.id_pessoa = endereco.id_pessoa/*já utilizando a ligação com pessoa, agora pego o endereço da empresa*/
+INNER JOIN projeto pr on pr.id_colaborador = ob.id_colaborador/*fazer ligacao com projeto para pegar o id colaborador de quem é responsável pelo projeto*/
+INNER JOIN colaborador col on pr.id_colaborador = col.id_colaborador/*ligação para pegar o id_pessoa*/
+INNER JOIN pessoa pcol on pcol.id_pessoa = col.id_pessoa/*é uma nova ligação, essa é para pegar o nome do responsável pelo projeto*/
+INNER JOIN colaborador cola on cola.id_colaborador =  ob.id_colaborador/*nova ligação, imagina que comecei novamente de obra e estou fazendo essa ligação só para pegar quem é o reponsável pela obra na prática*/
+INNER JOIN pessoa pmestre on pmestre.id_pessoa = cola.id_pessoa;/*pegar o nome do responsável pela obra com uma nova ligação*/
+/*NOVA LIGAÇÃO -> DIFERENCIE COLOCANDO APELIDOS*/
+
+
+/*Responsável pelo projeto*/
+/*
+Gerar um relatório :
+Qual o projeto de cada obra -> projeto
+Matricula da pessoa responsável pelo projeto. -> colaborador
+Salario da pessoa que é responsável pelo projeto. -> colaborador
+Nome da pessoa responsável pelo projeto -> pessoa
+Data Inicio do projeto -> projeto
+Previsão do projeto -> projeto
+Data Prevista para finalizar -> projeto
+Valor do projeto -> projeto
+Status do projeto. -> tabela projeto
+*/
+SELECT 
+nome_projeto,nome AS responsável_projeto, matricula AS matricula_responsável,salario, tipo_projeto,data_inicio,previsao,data_fim,status 
+FROM projeto
+INNER JOIN colaborador col on col.id_colaborador = projeto.id_colaborador /*consigo a matricula e o salario*/
+INNER JOIN pessoa on pessoa.id_pessoa = col.id_pessoa;/*já utilizando a ligação anterior, puxo o nome*/
+
+
+/*EXEMPLO DO PROFESSOR*/
 CREATE VIEW relatorio_empreiteira AS
 SELECT 
 pe.nome AS nome_empresa,

@@ -1,0 +1,20 @@
+/*Relatório Empreiteira*/
+/*
+	Trazer os dados do endereço de  Empreiteira, Mestre de Obra e o Arquiteto.
+Rua
+CEP
+Cidade
+UF
+Vou adicionar: nome da empresa
+*/
+
+SELECT pemp.nome,rua,cidade,cep,uf,pcol.nome AS nome_do_arquiteto,pmestre.nome AS nome_mestre_de_obras FROM obra ob  
+INNER JOIN empreiteira emp on emp.id_empreiteira = ob.id_empreiteira
+INNER JOIN pessoa pemp on emp.id_pessoa = pemp.id_pessoa/*utilizando a ligação anterior, pego o id da pessoa para pegar o nome e na próxima já pegar o endereco*/
+INNER JOIN endereco on pemp.id_pessoa = endereco.id_pessoa/*já utilizando a ligação com pessoa, agora pego o endereço da empresa*/
+INNER JOIN projeto pr on pr.id_colaborador = ob.id_colaborador/*fazer ligacao com projeto para pegar o id colaborador de quem é responsável pelo projeto*/
+INNER JOIN colaborador col on pr.id_colaborador = col.id_colaborador/*ligação para pegar o id_pessoa*/
+INNER JOIN pessoa pcol on pcol.id_pessoa = col.id_pessoa/*é uma nova ligação, essa é para pegar o nome do responsável pelo projeto*/
+INNER JOIN colaborador cola on cola.id_colaborador =  ob.id_colaborador/*nova ligação, imagina que comecei novamente de obra e estou fazendo essa ligação só para pegar quem é o reponsável pela obra na prática*/
+INNER JOIN pessoa pmestre on pmestre.id_pessoa = cola.id_pessoa;/*pegar o nome do responsável pela obra com uma nova ligação*/
+/*NOVA LIGAÇÃO -> DIFERENCIE COLOCANDO APELIDOS*/

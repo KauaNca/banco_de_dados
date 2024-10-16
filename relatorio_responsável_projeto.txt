@@ -1,0 +1,18 @@
+/*Responsável pelo projeto*/
+/*
+Gerar um relatório :
+Qual o projeto de cada obra -> projeto
+Matricula da pessoa responsável pelo projeto. -> colaborador
+Salario da pessoa que é responsável pelo projeto. -> colaborador
+Nome da pessoa responsável pelo projeto -> pessoa
+Data Inicio do projeto -> projeto
+Previsão do projeto -> projeto
+Data Prevista para finalizar -> projeto
+Valor do projeto -> projeto
+Status do projeto. -> tabela projeto
+*/
+SELECT 
+nome_projeto,nome AS responsável_projeto, matricula AS matricula_responsável,salario, tipo_projeto,data_inicio,previsao,data_fim,status 
+FROM projeto
+INNER JOIN colaborador col on col.id_colaborador = projeto.id_colaborador /*consigo a matricula e o salario*/
+INNER JOIN pessoa on pessoa.id_pessoa = col.id_pessoa;/*já utilizando a ligação anterior, puxo o nome*/
