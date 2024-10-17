@@ -511,6 +511,28 @@ O SELECT PODE TER ACESSO AS COLUNAS DAS DUAS.
 
 
 
+AULA 441 - APELIDANDO TABELAS
+Colocando apelidos, as querys ficam menos verbosas e com eles pode-se usar em qualquer nível
+da consulta.
+Ex.:
+
+SELECT * FROM clientes INNER JOIN pedidos
+-->->apelidando
+
+SELECT * FROM clientes cl INNER JOIN pedidos pe
+
+cl = tabela cliente
+pe = pedidos
+
+E agora pode-se também usar esses apelidos em qualquer parte da consulta
+
+SELECT cl.nome FROM clientes cl INNER JOIN pedidos pe ORDER BY pe
+
+
+
+
+
+
 
 
 
