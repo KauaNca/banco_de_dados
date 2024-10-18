@@ -1,0 +1,26 @@
+/*
+Criar um relatório que mostre os Itens Vendas:
+Quantidade na venda -> item_venda x
+Preço -> item_venda x
+Valor Bruto -> item_venda x
+Desconto -> item_venda x
+Acréscimo -> item_venda x
+Coluna Cancelado -> item_venda x
+Nome do Cliente -> pessoa
+Nome do Atendente -> pessoa
+Qual o produto -> produto
+Qual a categoria -> categoria x
+Total da Venda -> venda X
+
+*/
+
+SELECT pcli.nome AS nome_cliente,pat.nome AS responsavel_venda, pro.descricao AS produto_vendido,c.descricao AS categoria_produto,cancelado AS produto_cancelado, IV.quantidade AS quantidade_produto,
+IV.desconto,IV.acrescimo,IV.preco,IV.valor_bruto,IV.valor_total AS total_na_venda
+FROM item_venda IV
+INNER JOIN venda V on IV.id_venda = V.id_venda      /*ligacao com venda e assim tendo acesso aos id cliente,atendente e outras colunas de venda*/
+INNER JOIN produto pro on pro.id_produto = IV.id_produto  /*ligacao com produto e assim conseguindo o id categoria*/
+INNER JOIN categoria c on c.id_categoria = pro.id_categoria    /*utilizando a ligação anterior para pegar o nome da categoria*/
+INNER JOIN atendente at on at.id_atendente = V.id_atendente   /* a partir daqui é o processo para pegar os nomes já utilizando a primeira ligação que é vendas*/
+INNER JOIN pessoa pat on pat.id_pessoa = at.id_pessoa
+INNER JOIN cliente cli on cli.id_cliente = V.id_cliente
+INNER JOIN pessoa pcli on pcli.id_pessoa = cli.id_pessoa;

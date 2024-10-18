@@ -1,0 +1,14 @@
+/*
+Criar um relatório para saber quem fez a venda:
+Numero do Cupom -> venda
+Qual o cliente -> venda
+Qual o atendente -> pessoa
+Valor total da venda 
+*/
+select 
+id_venda,venda.id_cliente, pcl.nome AS nome_cliente,venda.id_atendente, pat.nome AS nome_atendente,total AS total_venda
+from venda /*já consigo por aqui o número da venda, valor total da compra e os id de cliente e atendente, falta os nomes*/
+INNER JOIN cliente on venda.id_cliente = cliente.id_cliente /*ligacao com cliente*/
+INNER JOIN pessoa pcl on cliente.id_pessoa = pcl.id_pessoa /*utilizando a ligação cliente para puxar o nome na tabela pessoa*/
+INNER JOIN atendente on atendente.id_atendente = venda.id_atendente /*ligacao com atendente*/
+INNER JOIN pessoa pat on atendente.id_pessoa = pat.id_pessoa;/*nova ligacao com pessoa para conseguir o nome do atendente*/

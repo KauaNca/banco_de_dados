@@ -1,0 +1,16 @@
+    SELECT 
+    ptu.nome as nome_do_tutor,
+    pv.nome as nome_veterinario, 
+    an.nome as nome_do_animal,
+    peso,
+    raca,
+    an.idade,
+    con.data_hora as data_consulta,
+    medicamento as medicamento_passado 
+    FROM consulta con
+    INNER JOIN animal an ON con.id_animal = an.id_animal
+    INNER JOIN tutor tu on an.id_tutor = tu.id_tutor
+    INNER JOIN pessoa ptu on tu.id_pessoa = ptu.id_pessoa
+    INNER JOIN receita_medica rm on rm.id_consulta = con.id_consulta
+    INNER JOIN veterinario on con.id_veterinario = veterinario.id_veterinario
+    INNER JOIN pessoa pv on veterinario.id_pessoa = pv.id_pessoa;

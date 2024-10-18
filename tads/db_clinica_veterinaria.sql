@@ -103,6 +103,7 @@ CREATE TABLE historico_medico
  FOREIGN KEY (id_veterinario) REFERENCES veterinario(id_veterinario)
 );  
 
+
 -- INSERINDO REGISTROS
 
 -- Inserindo tutores
@@ -196,6 +197,70 @@ VALUES
 (8, 'Ativo', '70007-007', 'Brasília', 'Quadra 8', 'Brazlândia', 'DF', 8),  -- Dr. Marcos Silva
 (9, 'Ativo', '70008-008', 'Brasília', 'Quadra 9', 'Sobradinho', 'DF', 9),  -- Dra. Fernanda Alves
 (10, 'Ativo', '70009-009', 'Brasília', 'Quadra 10', 'Samambaia', 'DF', 10);  -- Lucas Martins (veterinário)
+
+
+ALTER TABLE animal ADD COLUMN peso float not null;
+ALTER TABLE animal CHANGE raca raca varchar(20) not null;
+
+UPDATE animal
+SET peso = CASE id_animal
+    WHEN 1 THEN 30.5  -- Rex
+    WHEN 2 THEN 10.0  -- Mia
+    WHEN 3 THEN 25.0  -- Thor
+    WHEN 4 THEN 2.5   -- Luna
+    WHEN 5 THEN 20.0  -- Bela
+    WHEN 6 THEN 35.0  -- Spike
+    WHEN 7 THEN 5.0   -- Tom
+    WHEN 8 THEN 3.0   -- Snow
+    WHEN 9 THEN 28.0  -- Blue
+    WHEN 10 THEN 22.0 -- Buddy
+    WHEN 11 THEN 40.0 -- Toby
+    WHEN 12 THEN 18.0 -- Daisy
+    END,
+    raca = CASE id_animal
+    WHEN 1 THEN 'Labrador'
+    WHEN 2 THEN 'Siamês'
+    WHEN 3 THEN 'Bulldog'
+    WHEN 4 THEN 'Holandês'
+    WHEN 5 THEN 'Poodle'
+    WHEN 6 THEN 'Rottweiler'
+    WHEN 7 THEN 'Persa'
+    WHEN 8 THEN 'Siamês'
+    WHEN 9 THEN 'Beagle'
+    WHEN 10 THEN 'Golden Retriever'
+    WHEN 11 THEN 'Pitbull'
+    WHEN 12 THEN 'Chihuahua'
+    END;
+    
+    
+/*Criar um relatório onde mostrar:
+Nome do Tutor -> pessoa x
+Veterinário -> pessoa
+Animal -> animal x
+Peso x animal x
+Raça x  animal x
+Idade -> animal x
+Data Consulta -> consulta x
+Medicamento -> receita x
+*/
+    SELECT 
+    ptu.nome as nome_do_tutor,
+    pv.nome as nome_veterinario, 
+    an.nome as nome_do_animal,
+    peso,
+    raca,
+    an.idade,
+    con.data_hora as data_consulta,
+    medicamento as medicamento_passado 
+    FROM consulta con
+    INNER JOIN animal an ON con.id_animal = an.id_animal
+    INNER JOIN tutor tu on an.id_tutor = tu.id_tutor
+    INNER JOIN pessoa ptu on tu.id_pessoa = ptu.id_pessoa
+    INNER JOIN receita_medica rm on rm.id_consulta = con.id_consulta
+    INNER JOIN veterinario on con.id_veterinario = veterinario.id_veterinario
+    INNER JOIN pessoa pv on veterinario.id_pessoa = pv.id_pessoa;
+
+
 
 
 
