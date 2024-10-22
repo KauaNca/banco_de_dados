@@ -200,7 +200,8 @@ VALUES
 
 
 ALTER TABLE animal ADD COLUMN peso float not null;
-ALTER TABLE animal CHANGE raca raca varchar(20) not null;
+ALTER TABLE animal ADD COLUMN raca varchar(20) not null;
+-- ALTER TABLE animal CHANGE raca raca varchar(20) not null;
 
 UPDATE animal
 SET peso = CASE id_animal
@@ -231,7 +232,7 @@ SET peso = CASE id_animal
     WHEN 11 THEN 'Pitbull'
     WHEN 12 THEN 'Chihuahua'
     END;
-    
+
     
 /*Criar um relatório onde mostrar:
 Nome do Tutor -> pessoa x
@@ -259,6 +260,21 @@ Medicamento -> receita x
     INNER JOIN receita_medica rm on rm.id_consulta = con.id_consulta
     INNER JOIN veterinario on con.id_veterinario = veterinario.id_veterinario
     INNER JOIN pessoa pv on veterinario.id_pessoa = pv.id_pessoa;
+
+/*
+	Criar Relatório Histórico Medico
+Trazer os dados:
+Campo de Observação do Histórico Medico. -> histórico médico
+Nome do Animal, -> animal
+Observação da Consulta Medica. -> consulta
+Nome do medicamento -> receita
+Data inicio -> historico
+Data fim -> historico
+prazo x
+Observação do medicamento. -> receita
+Nome doTutor -> pessoa
+*/
+SELECT *  FROM consulta con;
 
 
 

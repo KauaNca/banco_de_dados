@@ -573,3 +573,82 @@ sintaxe:
 	FROM tabela1 	#de onde vai começar a procurar. Começar da tabela mais fraca (mais chaves estrangeiras) para ir subindo e conseguindo cruzar informações
 	INNER JOIN tabela2 	#tabela onde está as colunas que não estão na tabela1 e que vai servir para cruzar informações
 	ON tabela1.coluna_comum = tabela2.coluna_comum; #aqui é feito a comparação, normalmente entre chaves, para que todas as colunas que não há na primeira tabela apareça
+
+
+
+
+
+TRIGGERS 
+
+TRIGGERS são gatilhos automáticos que você define quando irá
+se ativar após um determinado evento na tabela.
+Esses eventos são:
+
+BEFORE INSERT
+AFTER INSERT
+BEFORE UPDATE
+AFTER UPDATE
+BEFORE DELETE
+AFTER DELETE
+
+Serve para
+1 - Atualizacao automática de tabelas, fazendo a máquina trabalhar
+2 - validacão de registros, não deixando qualquer dado passar
+3 - auditoria, saber quem fez alterações
+
+SINTAXE BÁSICA
+CREATE TRIGGER nome_do_trigger
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON nome_da_tabela
+FOR EACH ROW
+BEGIN
+   -- Ações a serem executadas
+END;
+
+FOR EACH ROW?
+A cláusula FOR EACH ROW em um trigger no MySQL 
+significa que o trigger será executado para cada linha 
+afetada pela operação 
+(seja um INSERT, UPDATE ou DELETE).
+
+
+
+ACESSANDO DADOS DA LINHA AFETADA/NOVA
+NEW: Utilizado para acessar os valores novos da linha 
+(após a modificação, no caso de INSERT ou UPDATE).
+
+OLD: Utilizado para acessar os valores antigos da linha 
+(antes da modificação ou exclusão, no caso de UPDATE ou DELETE).
+
+
+EX.:
+
+CREATE TRIGGER before_usuario_update
+BEFORE UPDATE ON usuarios
+FOR EACH ROW
+BEGIN
+   -- Verifica se o email foi alterado
+
+   IF OLD.email != NEW.email THEN
+      INSERT INTO log_alteracoes (usuario_id, alteracao, data)
+	-- 'NEW.id' se refere ao 'id' da nova linha inserida na tabela 'usuarios'
+      VALUES (NEW.id, 'Email alterado', NOW());
+   END IF;
+END;
+
+OBS: O NEW e OLD está servindo para acessar as colunas da tabela usuarios.
+
+
+
+DELIMITER 
+
+ao usar DELIMITER //, para encerrar um bloco de código, como a criação de um trigger, 
+basta terminar com // no final, sem precisar explicitamente redefinir o delimitador para ;. 
+No entanto, muitas vezes é uma boa prática voltar o delimitador para ; após o bloco, especialmente 
+se você estiver executando vários comandos SQL subsequentes que usam o delimitador padrão.
+
+DELIMITER //: Muda o delimitador padrão de ; para //, permitindo a criação de um 
+bloco de código como BEGIN...END sem confusão com o delimitador padrão. 
+Isso é necessário porque um trigger contém múltiplas instruções SQL.
+
+
