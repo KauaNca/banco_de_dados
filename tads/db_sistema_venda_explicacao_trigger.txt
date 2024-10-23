@@ -1,0 +1,41 @@
+CREATE TRIGGER aumentar_estoque
+AFTER UPDATE ON item_venda
+FOR EACH ROW
+BEGIN
+    IF NEW.cancelado = 'S' THEN
+        -- Atualiza o estoque do produto
+        UPDATE produto 
+        SET quantidade_estoque = quantidade_estoque + NEW.quantidade 
+        WHERE id_produto = NEW.id_produto;
+
+        -- Atualiza os valores na tabela venda
+        UPDATE venda 
+        SET total_bruto = total_bruto - NEW.preco,
+			desconto = desconto - NEW.desconto,
+            acrescimo = acrescimo - NEW.acrescimo,
+            valor_total = valor_total - (NEW.preco + NEW.desconto + NEW.acrescimo)
+        WHERE id_venda = NEW.id_venda;
+    END IF;
+END;
+
+//
+
+EXPLICAÇÃO
+
+Uma trigger que só ativará após houver uma atualização
+da coluna cancelado da tabela item_venda para S.
+Condição cumprida, atualizará a coluna quantidade_estoque de produto e
+também a tabela venda.
+
+OBS.: 
+Em triggers, NEW e OLD são usados para referenciar os valores das colunas antes e depois da operação que disparou a trigger:
+
+NEW: Refere-se aos valores das novas linhas que estão sendo inseridas ou atualizadas.
+
+OLD: Refere-se aos valores das linhas antigas que estão sendo atualizadas ou deletadas.
+
+Por exemplo, em uma trigger BEFORE INSERT ou AFTER INSERT, você usaria NEW para acessar os valores que estão sendo inseridos. 
+Em uma trigger BEFORE UPDATE ou AFTER UPDATE, você pode usar NEW para os valores atualizados e OLD para os valores originais.
+
+Então, quando fiz set total_bruto total_bruto - NEW.preco, apesar de eu não ter mudado nada no preço, é necessário para
+dizer à 'máquina' que qual valor estou referindo: o antigo ou o novo
