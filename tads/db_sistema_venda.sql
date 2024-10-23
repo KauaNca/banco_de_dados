@@ -1,4 +1,5 @@
-
+CREATE DATABASE sistema_venda;
+USE sistema_venda;
 -- Tabela pessoa
 
 CREATE TABLE pessoa (
@@ -285,11 +286,79 @@ SELECT*FROM venda;
 SELECT*FROM produto;
 SELECT*FROM item_venda;
 
-INSERT INTO venda (total_bruto,desconto,acrescimo,valor_total,situacao, id_cliente,id_atendente,numero_cupom) values(0,0,0,0,'P',2,3,1),(0,0,0,0,'P',2,3,2);
-INSERT INTO item_venda(quantidade,desconto,id_produto,id_venda) VALUES (5,0,3,4), (10,15.00,3,4),(1,200,10,4);
+INSERT INTO venda (total_bruto,desconto,acrescimo,valor_total,situacao, id_cliente,id_atendente,numero_cupom) values(0,0,0,0,'P',2,3,2),(0,0,0,0,'P',2,3,2);
+INSERT INTO item_venda(quantidade,desconto,id_produto,id_venda) VALUES (5,0,3,2), (10,15.00,3,2),(1,200,10,3);
 
 UPDATE item_venda SET cancelado = 'S' WHERE id_item_venda = 17
 
+
+DELIMITER //
+CREATE TRIGGER historico_preco
+AFTER UPDATE ON produto -- acessar tabela produto
+FOR EACH ROW
+BEGIN
+	IF(NEW.preco <> OLD.preco) THEN -- se após a atualizacao o preço 
+    INSERT INTO alteracao_preco(preco_novo,preco_antigo,id_produto)
+    VALUES (NEW.preco,OLD.preco,NEW.id_produto);
+    END IF;
+END;
+//
+
+SELECT * FROM alteracao_preco;
+SELECT*FROM produto;
+UPDATE produto SET preco = 8.10 WHERE id_produto = 2;
+
+
+/*AUDITORIA */
+CREATE TABLE auditoria(
+id_auditoria int primary key auto_increment,
+nome varchar(30), 
+cpf varchar(16),
+situacao varchar(15),
+id_pessoa int,
+foreign key(id_pessoa) references pessoa(id_pessoa)
+);
+DROP TABLE auditoria;
+
+DELIMITER //
+CREATE TRIGGER before_delete_pessoa
+AFTER DELETE ON pessoa FOR EACH ROW
+BEGIN
+	INSERT INTO auditoria(nome,cpf,situacao,id_pessoa) VALUES(OLD.nome,OLD.cpf_cnpj,'DELETADO',OLD.id_pessoa);
+END;
+//
+
+DELIMITER //
+CREATE TRIGGER after_insert_pessoa
+AFTER INSERT ON pessoa FOR EACH ROW
+BEGIN
+	INSERT INTO auditoria(nome,cpf,situacao,id_pessoa) VALUES(NEW.nome,NEW.cpf_cnpj,'INSERIDO',NEW.id_pessoa);
+END;
+//
+
+DELIMITER //
+CREATE TRIGGER update_pessoa_after
+BEFORE INSERT ON pessoa FOR EACH ROW
+BEGIN
+	UPDATE pessoa SET situacao = 'Ativo';
+END;
+//
+
+DROP TRIGGER before_delete_pessoa;
+DROP TRIGGER after_insert_pessoa;
+
+
+/*TESTANDO TRIGGER DA TABELA AUDITORIA - CADASTRO*/
+ALTER TABLE pessoa CHANGE situacao tipo VARCHAR(15) NOT NULL;
+ALTER TABLE pessoa CHANGE situacao situacao VARCHAR(15);
+
+
+SELECT*FROM pessoa;
+INSERT INTO pessoa (nome,idade,cpf_cnpj,tipo) VALUES ('Isabel',18,'000000001','Cliente');
+SELECT * FROM auditoria;
+
+
+DELETE FROM pessoa WHERE id_pessoa = 7;
 
 
 
