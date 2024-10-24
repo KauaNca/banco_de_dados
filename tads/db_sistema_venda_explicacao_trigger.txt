@@ -39,3 +39,25 @@ Em uma trigger BEFORE UPDATE ou AFTER UPDATE, você pode usar NEW para os valore
 
 Então, quando fiz set total_bruto total_bruto - NEW.preco, apesar de eu não ter mudado nada no preço, é necessário para
 dizer à 'máquina' que qual valor estou referindo: o antigo ou o novo
+
+
+
+
+------------------------------------
+
+
+/* ERRADO
+DELIMITER //
+CREATE TRIGGER update_pessoa_after
+BEFORE INSERT ON pessoa FOR EACH ROW
+BEGIN
+	UPDATE pessoa SET situacao = 'Ativo';
+END;
+//
+*/
+
+Perceba que a trigger foi criada em pessoa e essa mesma trigger fará com antes do INSERT, coloque em situacao o ativo.
+Mas não dá certo, você não pode atualizar a tabela que acionou a trigger diretamente de dentro dessa mesma trigger, 
+porque isso pode causar um loop infinito ou inconsistências.
+Se você precisar fazer atualizações na mesma tabela, uma alternativa é usar uma tabela intermediária para armazenar 
+temporariamente os dados ou usar eventos agendados para realizar atualizações após a inserção inicial.

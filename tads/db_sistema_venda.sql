@@ -248,7 +248,6 @@ END;
 */
 
 DELIMITER //
-
 CREATE TRIGGER aumentar_estoque
 AFTER UPDATE ON item_venda
 FOR EACH ROW
@@ -308,6 +307,7 @@ SELECT * FROM alteracao_preco;
 SELECT*FROM produto;
 UPDATE produto SET preco = 8.10 WHERE id_produto = 2;
 
+/*AULA DO DIA 23/10/2024*/
 
 /*AUDITORIA */
 CREATE TABLE auditoria(
@@ -318,7 +318,7 @@ situacao varchar(15),
 id_pessoa int,
 foreign key(id_pessoa) references pessoa(id_pessoa)
 );
-DROP TABLE auditoria;
+
 
 DELIMITER //
 CREATE TRIGGER before_delete_pessoa
@@ -327,6 +327,7 @@ BEGIN
 	INSERT INTO auditoria(nome,cpf,situacao,id_pessoa) VALUES(OLD.nome,OLD.cpf_cnpj,'DELETADO',OLD.id_pessoa);
 END;
 //
+/*A TRIGGER before_delete_pessoa não funcionará em caso dos ID das pessoas estarem sendo utilizados em outras tabelas*/
 
 DELIMITER //
 CREATE TRIGGER after_insert_pessoa
@@ -335,7 +336,16 @@ BEGIN
 	INSERT INTO auditoria(nome,cpf,situacao,id_pessoa) VALUES(NEW.nome,NEW.cpf_cnpj,'INSERIDO',NEW.id_pessoa);
 END;
 //
-
+DELIMITER //
+CREATE TRIGGER after_insert_pessoa_dois
+AFTER UPDATE ON pessoa FOR EACH ROW
+BEGIN
+	IF (NEW.situacao = 'N') THEN
+	UPDATE auditoria SET situacao = 'NÃO ATIVO' WHERE id_pessoa  = NEW.id_pessoa;
+    END IF;
+END;
+//
+/* ERRADO
 DELIMITER //
 CREATE TRIGGER update_pessoa_after
 BEFORE INSERT ON pessoa FOR EACH ROW
@@ -343,22 +353,40 @@ BEGIN
 	UPDATE pessoa SET situacao = 'Ativo';
 END;
 //
+*/
 
+DROP TRIGGER after_insert_auditoria;
 DROP TRIGGER before_delete_pessoa;
 DROP TRIGGER after_insert_pessoa;
+DROP TRIGGER update_pessoa_after;
+DROP TRIGGER  after_insert_pessoa_dois;
 
+
+
+ALTER TABLE pessoa CHANGE situacao tipo VARCHAR(15) NOT NULL;
+ALTER TABLE pessoa CHANGE situacao situacao VARCHAR(15) NOT NULL DEFAULT 'A';
+UPDATE pessoa SET situacao = 'A' WHERE id_pessoa >=1; 
 
 /*TESTANDO TRIGGER DA TABELA AUDITORIA - CADASTRO*/
-ALTER TABLE pessoa CHANGE situacao tipo VARCHAR(15) NOT NULL;
-ALTER TABLE pessoa CHANGE situacao situacao VARCHAR(15);
+INSERT INTO pessoa (nome,idade,cpf_cnpj,tipo) VALUES ('Kauã',21,'000000002','Cliente');
+INSERT INTO pessoa (nome, idade, cpf_cnpj, tipo) VALUES ('Isabel', 18, '000000001', 'Cliente');
+INSERT INTO pessoa (nome, idade, cpf_cnpj, tipo) VALUES ('João', 25, '000000002', 'Atendente');
+INSERT INTO pessoa (nome, idade, cpf_cnpj, tipo) VALUES ('Maria', 30, '000000003', 'Cliente');
+INSERT INTO pessoa (nome, idade, cpf_cnpj, tipo) VALUES ('Carlos', 22, '000000004', 'Atendente');
+INSERT INTO pessoa (nome, idade, cpf_cnpj, tipo) VALUES ('Ana', 27, '000000005', 'Cliente');
+-- com esses inserts, ativa a trigger de inserir em auditoria -> after_insert_pessoa
+
+UPDATE pessoa SET situacao = 'N' WHERE id_pessoa = 9; -- vai atualizar em auditoria que o usuário não está ativo. testando a trigger after_insert_pessoa_dois.
+DELETE FROM pessoa WHERE id_pessoa = 7; -- não consegue pois está 'amarrado'
 
 
-SELECT*FROM pessoa;
-INSERT INTO pessoa (nome,idade,cpf_cnpj,tipo) VALUES ('Isabel',18,'000000001','Cliente');
-SELECT * FROM auditoria;
+CREATE INDEX idx_cpf_cnpj
+ON pessoa (cpf_cnpj);
+DROP INDEX idx_cpf_cnpj ON pessoa;
 
 
-DELETE FROM pessoa WHERE id_pessoa = 7;
+SELECT nome FROM pessoa WHERE nome = 'Kaua';
+EXPLAIN SELECT * FROM pessoa;
 
 
 

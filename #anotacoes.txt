@@ -652,3 +652,30 @@ bloco de código como BEGIN...END sem confusão com o delimitador padrão.
 Isso é necessário porque um trigger contém múltiplas instruções SQL.
 
 
+
+
+
+INDEX
+Os índices são uma forma poderosa de melhorar a performance das consultas no banco de dados.
+
+CREATE INDEX: Para acelerar as consultas em colunas frequentemente pesquisadas.
+UNIQUE: Garante que todos os valores na coluna sejam únicos.
+FULLTEXT: Para pesquisas de texto completas.
+
+SINTAXE BÁSICA
+CREATE INDEX nome_do_indice
+ON nome_da_tabela (coluna1, coluna2, ...);
+
+Ex.:
+CREATE INDEX idx_cpf_cnpj
+ON pessoa (cpf_cnpj);
+
+Isso cria um índice chamado idx_cpf_cnpj na coluna cpf_cnpj da tabela pessoa, 
+acelerando as consultas que filtram ou ordenam por essa coluna.
+
+Tipos:
+UNIQUE INDEX: Garante que todos os valores no índice sejam únicos.
+FULLTEXT INDEX: Usado para buscas de texto completo.
+PRIMARY KEY: Índice único AUTOMATICAMENTE CRIADO em colunas de chave primária.
+
+
