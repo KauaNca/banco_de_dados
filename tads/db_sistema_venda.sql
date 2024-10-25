@@ -380,13 +380,60 @@ UPDATE pessoa SET situacao = 'N' WHERE id_pessoa = 9; -- vai atualizar em audito
 DELETE FROM pessoa WHERE id_pessoa = 7; -- não consegue pois está 'amarrado'
 
 
-CREATE INDEX idx_cpf_cnpj
-ON pessoa (cpf_cnpj);
-DROP INDEX idx_cpf_cnpj ON pessoa;
+/*AULA 25/10/2024*/
+
+/*Criar um relatório de total dos itens cancelados, com o nome do atendente, nome do produto e o valor total cancelado.*/
+
+UPDATE item_venda SET cancelado = 'S' WHERE id_item_venda IN (1,6,7)
+
+SELECT 
+COUNT(cancelado) AS total_itens_cancelados_na_venda, 
+item_venda.id_venda, pessoa.nome AS nome_atendente,
+descricao AS nome_do_produto,
+SUM(item_venda.valor_total) AS valor_total_dos_cancelados
+FROM item_venda
+INNER JOIN venda ON item_venda.id_venda = venda.id_venda -- conexão com venda
+INNER JOIN atendente ON venda.id_atendente = atendente.id_atendente  -- utilizando venda para ligação atendente
+INNER JOIN pessoa ON atendente.id_pessoa = pessoa.id_pessoa  --
+INNER JOIN produto ON produto.id_produto = item_venda.id_produto
+WHERE item_venda.cancelado = 'S'
+GROUP BY 
+pessoa.nome,
+item_venda.id_venda,
+descricao;
+
+/*
+Criar um relatório do atendente ordenando o maior valor primeiro para saber quem vendeu mais, lembrando que tem que trazer só a venda que não foi cancelada.
+Trazer o nome e total das vendas.
+*/
+SELECT venda.id_atendente,
+nome AS atendente, -- conseguido por meio da ligação com pessoa
+COUNT(venda.id_atendente) AS numero_de_vendas  -- coluna de vendas
+FROM venda -- aqui, já consigo pegar o número de vezes que o atendente vendeu
+INNER JOIN atendente ON atendente.id_atendente = venda.id_atendente -- fazendo essa ligacão para ir em pessoa pegar o nome
+INNER JOIN pessoa ON pessoa.id_pessoa = atendente.id_pessoa 
+WHERE venda.situacao <> 'N' -- condição para que não seja uma venda cancelada
+GROUP BY venda.id_atendente -- agrupar por meio do número de vezes que o id_atendente aparece
+ORDER BY COUNT(venda.id_atendente) DESC;
+
+-- INSERINDO MAIS REGISTROS EM VENDA PARA TESTAR O ORDER BY
+INSERT INTO venda (total_bruto, desconto, acrescimo, valor_total, situacao, id_atendente, id_cliente, numero_cupom)
+VALUES (100.00, 10.00, 5.00, 95.00, 'S', 2, 3, '3');
+INSERT INTO venda (total_bruto, desconto, acrescimo, valor_total, situacao, id_atendente, id_cliente, numero_cupom)
+VALUES (150.00, 15.00, 10.00, 145.00, 'S', 2, 3, '4');
+INSERT INTO venda (total_bruto, desconto, acrescimo, valor_total, situacao, id_atendente, id_cliente, numero_cupom)
+VALUES (200.00, 20.00, 15.00, 195.00, 'S', 2, 3, '5'); 
+INSERT INTO venda (total_bruto, desconto, acrescimo, valor_total, situacao, id_atendente, id_cliente, numero_cupom)
+VALUES (250.00, 25.00, 20.00, 245.00, 'S', 2, 3, '6');
 
 
-SELECT nome FROM pessoa WHERE nome = 'Kaua';
-EXPLAIN SELECT * FROM pessoa;
+
+
+
+
+
+
+
 
 
 

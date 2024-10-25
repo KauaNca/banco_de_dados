@@ -208,7 +208,7 @@ Simples: a primeira ordem é prioridade
 
 Ex.: select *from animes where nota > 8.5 order by nome desc, nota asc;
 ->primeiro a coluna nome será ordenada de forma decrescente
-->após isso nota
+->após isso nota será ordenada de acordo com a coluna nome
 
 
 

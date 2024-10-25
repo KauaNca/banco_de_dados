@@ -101,3 +101,13 @@ INSERT INTO avaliacao (id_avaliacao, id_aluno, primeira_nota, segunda_nota, terc
 (2, 2, 7.0, 6.5, 8.0, 7.5);
 
 UPDATE avaliacao SET primeira_nota = 9 WHERE id_avaliacao = 1 ;
+
+
+/*AULA 25/10/2024*/
+/*Criar um relatório do aluno mostrando as notas dele, nome, media e se foi aprovado ou reprovado.*/
+
+SELECT nome,primeira_nota,segunda_nota,terceira_nota,quarta_nota,media,avaliacao.situacao 
+FROM aluno
+INNER JOIN pessoa ON aluno.id_pessoa = pessoa.id_pessoa
+INNER JOIN avaliacao on avaliacao.id_aluno = aluno.id_aluno;
+
