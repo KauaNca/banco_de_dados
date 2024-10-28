@@ -40,10 +40,6 @@ INNER JOIN pessoa pat on pat.id_pessoa = at.id_pessoa
 INNER JOIN cliente cli on cli.id_cliente = V.id_cliente
 INNER JOIN pessoa pcli on pcli.id_pessoa = cli.id_pessoa;
 
-SELECT*FROM item_venda;
-
-SELECT*FROM PRODUTO;
-
 
 UPDATE produto SET quantidade_estoque = ABS(quantidade_estoque  - (SELECT SUM(quantidade) FROM item_venda WHERE id_produto = 1))  WHERE codigo  = 001;
 UPDATE produto SET quantidade_estoque = ABS(quantidade_estoque  - (SELECT SUM(quantidade) FROM item_venda WHERE id_produto = 2))  WHERE codigo  = 002;
