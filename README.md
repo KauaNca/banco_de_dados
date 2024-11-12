@@ -1,0 +1,1 @@
+Este repositório armazena scripts e exemplos de consultas SQL para o banco de dados MySQL. O objetivo é organizar e compartilhar consultas e estruturas de banco de dados para referência e aprendizado.
