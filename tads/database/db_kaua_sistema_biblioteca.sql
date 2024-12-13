@@ -14,7 +14,7 @@ create table usuario(
 	id_usuario int primary key auto_increment,
     id_pessoa INT NOT NULL,
     FOREIGN KEY (id_pessoa) REFERENCES pessoa(id_pessoa),
-    livros_pendentes boolean null
+    livros int not null
 );
 
 INSERT INTO pessoa (nome, idade, cpf_cnpj, email, telefone, situacao)
@@ -35,7 +35,7 @@ VALUES
 ('Fernanda Alves', 33, '111.222.333-44', 'fernanda.alves@email.com', '91234-9876', 'A'),
 ('Rafael Costa', 41, '222.333.444-55', 'rafael.costa@email.com', '99876-5432', 'A');
 
-INSERT INTO usuario (id_pessoa, livros_pendentes)
+INSERT INTO usuario (id_pessoa, livros)
 VALUES 
 (1, 0),
 (2, 0),
@@ -85,11 +85,10 @@ create table compra(
     valor float not null
 );
 
-DROP TABLE reserva;
 CREATE TABLE login (
     id_login INT PRIMARY KEY AUTO_INCREMENT,
-    id_pessoa INT NOT NULL,
-    FOREIGN KEY (id_pessoa) REFERENCES pessoa(id_pessoa),
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     usuario VARCHAR(45) NOT NULL UNIQUE,
     senha VARCHAR(60) NOT NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -170,8 +169,39 @@ INSERT INTO livro (titulo, sinopse, ano, valor, id_categoria) VALUES
 ('O Hobbit', 'A aventura de Bilbo Bolseiro na Terra Média.', 1937, 29.99, 2),
 ('A Menina que Roubava Livros', 'Uma história emocionante durante a Segunda Guerra Mundial.', 2005, 24.99, 3);
 
+DELIMITER //
+
+CREATE TRIGGER usuario_automatico
+AFTER INSERT ON pessoa
+FOR EACH ROW
+BEGIN
+    INSERT INTO usuario(id_pessoa, livros) VALUES (NEW.id_pessoa, 0);
+END;
+//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER senha
+BEFORE INSERT ON login
+FOR EACH ROW
+BEGIN
+    SET NEW.senha = MD5(MD5(NEW.senha));
+END;
+
+//
+
+DELIMITER ;
+
 
 SELECT * FROM compra;
 SELECT * FROM usuario;
-SELECT titulo,ano,valor,categoria FROM livro INNER JOIN categoria on livro.id_categoria = categoria.id_categoria;
+SELECT * FROM login;
+SELECT * FROM livro;
+SELECT*FROM pessoa;
+SELECT*FROM compra;
+SELECT id_livro FROM livro WHERE titulo = '1984';
+
+
 DROP DATABASE kaua_sistema_biblioteca;
