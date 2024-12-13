@@ -79,12 +79,16 @@ create table compra(
 	id_reserva int primary key auto_increment,
     id_usuario int not null,
     foreign key (id_usuario) references usuario(id_usuario),
-    id_livro int not null,
-    foreign key (id_livro) references livro(id_livro),
     tipoPagamento varchar(10) not null,
     valor float not null
 );
-
+create table item_livro(
+	id_item_livro int primary key auto_increment,
+    valor float not null,
+    
+);
+id_livro int not null,
+    foreign key (id_livro) references livro(id_livro),
 CREATE TABLE login (
     id_login INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
@@ -181,19 +185,26 @@ END;
 
 DELIMITER ;
 
-DELIMITER //
 
+DELIMITER //
 CREATE TRIGGER senha
 BEFORE INSERT ON login
 FOR EACH ROW
 BEGIN
     SET NEW.senha = MD5(MD5(NEW.senha));
-END;
-
+END
 //
-
 DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER atualizar_senha
+BEFORE UPDATE ON login
+FOR EACH ROW
+BEGIN
+    SET NEW.senha = MD5(MD5(NEW.senha));
+END
+//
+DELIMITER ;
 
 SELECT * FROM compra;
 SELECT * FROM usuario;
