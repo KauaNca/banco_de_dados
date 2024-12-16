@@ -214,3 +214,7 @@ END
 DELIMITER ;
 
 INSERT INTO login(id_usuario,usuario,senha) value (16,'KauaNCa','123');
+select * from compra;
+select * from pessoa;
+select*from item_livro;
+DROP DATABASE kaua_sistema_biblioteca;
