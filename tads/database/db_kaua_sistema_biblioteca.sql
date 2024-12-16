@@ -33,7 +33,8 @@ VALUES
 ('Juliana Santos', 31, '999.000.111-22', 'juliana.santos@email.com', '92345-8899', 'A'),
 ('Leonardo Ferreira', 36, '000.111.222-33', 'leonardo.ferreira@email.com', '93456-1234', 'A'),
 ('Fernanda Alves', 33, '111.222.333-44', 'fernanda.alves@email.com', '91234-9876', 'A'),
-('Rafael Costa', 41, '222.333.444-55', 'rafael.costa@email.com', '99876-5432', 'A');
+('Rafael Costa', 41, '222.333.444-55', 'rafael.costa@email.com', '99876-5432', 'A'),
+('Kauã Nunes',21,'222.333.444-56','kaua@gmail.com','993091100','A');
 
 INSERT INTO usuario (id_pessoa, livros)
 VALUES 
@@ -51,7 +52,8 @@ VALUES
 (12, 0),
 (13, 0),
 (14, 0),
-(15, 0);
+(15, 0),
+(16, 0);
 
 
 CREATE TABLE categoria ( id_categoria INT NOT NULL AUTO_INCREMENT PRIMARY KEY, categoria VARCHAR(255) NOT NULL );
@@ -76,19 +78,24 @@ create table pedido(
 );
 
 create table compra(
-	id_reserva int primary key auto_increment,
+	id_compra int primary key auto_increment,
     id_usuario int not null,
     foreign key (id_usuario) references usuario(id_usuario),
     tipoPagamento varchar(10) not null,
-    valor float not null
+    valor float not null,
+    situacao varchar(5) not null
 );
 create table item_livro(
 	id_item_livro int primary key auto_increment,
     valor float not null,
+    id_livro int not null,
+    foreign key (id_livro) references livro(id_livro),
+    situacao varchar(5) not null,
+    id_compra int not null,
+    foreign key (id_compra) references compra(id_compra)
+
     
 );
-id_livro int not null,
-    foreign key (id_livro) references livro(id_livro),
 CREATE TABLE login (
     id_login INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
@@ -98,6 +105,7 @@ CREATE TABLE login (
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_modificacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
 
 INSERT INTO categoria (categoria) VALUES 
 ('Ficção Científica'),
@@ -121,7 +129,6 @@ INSERT INTO categoria (categoria) VALUES
 ('Clássicos'),
 ('Jovem Adulto');
 
-SELECT * FROM categoria;
 
 INSERT INTO livro (titulo, sinopse, ano, valor, id_categoria) VALUES
 ('Duna', 'Uma aventura épica em um deserto alienígena.', 1965, 29.99, 1),
@@ -206,13 +213,4 @@ END
 //
 DELIMITER ;
 
-SELECT * FROM compra;
-SELECT * FROM usuario;
-SELECT * FROM login;
-SELECT * FROM livro;
-SELECT*FROM pessoa;
-SELECT*FROM compra;
-SELECT id_livro FROM livro WHERE titulo = '1984';
-
-
-DROP DATABASE kaua_sistema_biblioteca;
+INSERT INTO login(id_usuario,usuario,senha) value (16,'KauaNCa','123');
